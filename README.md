@@ -2,7 +2,7 @@
 
 > 把逛 30 篇小红书笔记的纠结，压缩成一张帮你做决定的对比卡。
 
-🔗 **在线体验**：【(https://v0-shopping-decision-helper.vercel.app)】
+🔗 **在线体验**：https://v0-shopping-decision-helper.vercel.app
 
 ---
 
