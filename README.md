@@ -1,33 +1,55 @@
-# v0-shopping-decision-helper
+# 拔草卡 · AI 购物决策助手
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+> 把逛 30 篇小红书笔记的纠结，压缩成一张帮你做决定的对比卡。
 
-## Built with v0
+🔗 **在线体验**：【(https://v0-shopping-decision-helper.vercel.app)】
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+---
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_rjXJaZG7UJkCn0IdNl0DwxDltFPW)
+## 这是什么
 
-## Getting Started
+「拔草卡」是一个 AI 购物决策助手。你输入一个购物需求（比如「敏感肌防晒」「学生党护眼台灯」），它会扫描分析多篇笔记的观点，输出一张结构化决策卡——告诉你有哪些候选、各自的优点与翻车点、哪些是疑似营销恰饭、以及最适合你的那一个。
 
-First, run the development server:
+## 为什么做它
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+这个产品源于一个我自己的真实痛点：**种草社区让人越逛越难做决定。**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+笔记很多，但篇篇都是「真心推荐」，软广混杂着真实分享，缺乏横向对比。结果是——逛完几十篇，反而更不知道买哪个了。我想用 AI 把「读笔记的累」变成「看一张卡就能决定」。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 核心功能
 
-## Learn More
+- **结构化决策卡**：每个候选产品拆解为「优点 / 争议或翻车点 / 疑似恰饭信号 / 适合谁」四个维度
+- **疑似恰饭信号识别**：主动标记可能是营销推广的特征，帮用户反智商税（这是本产品最核心的差异点）
+- **热度 vs 真实口碑反差洞察**：当一个产品「全网很火但真实口碑一般」时高亮提醒——大家都在买的，不一定是真的好
+- **先给结论再给对比**：先收窄你的偏好、直接给主推，再展开候选对比，而不是平铺一堆信息让你自己挑
+- **价格区间筛选、可滑动翻阅的卡片、模拟种草帖**等体验细节
 
-To learn more, take a look at the following resources:
+## 产品迭代过程
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+这个项目经过了几轮基于真实用户反馈的迭代，每一轮都在解决一个被验证出来的真问题：
+
+1. **第一版**：把多篇笔记的信息整理成工整的产品卡片。
+   → 自测和用户反馈发现一个核心问题：**信息更全了，但用户看完还是不知道选哪个**——只是把「读笔记的累」换成了「读卡片的累」，没真正解决决策。
+
+2. **重构为决策工具**：把信息架构倒过来——先收窄需求、直接给主推结论，再给对比、最后才是详情下钻。让用户先拿到答案。
+
+3. **关于「销量排行」的取舍**：测试中用户希望加销量/热度排行（从众心理真实存在）。但我判断这与产品「反种草、反智商税」的初心冲突——销量高往往正是营销推起来的。所以没做成普通榜单，而是升级为「热度 vs 真实口碑」的反差对比，把用户的真实需求和产品价值统一起来。
+
+4. **场景边界的克制**：也考虑过支持「品牌内选规格（如口红色号）」，但判断这是另一个核心价值逻辑不同的场景，硬加会模糊定位。因此列入 roadmap，但 MVP 坚持把「跨品牌选品」一个场景做透。
+
+> 做这个项目最大的收获：**满足用户的表层需求很容易，但要想清楚这个需求背后真正该被解决的是什么。克制不做什么，和决定做什么同样重要。**
+
+## 技术栈
+
+- 使用 v0 (Vercel) 进行 AI 辅助开发（vibe coding）
+- Next.js + React + TypeScript
+- Tailwind CSS
+- 调用大模型 API 生成结构化分析结果
+
+## 关于数据的说明
+
+当前版本中，产品分析与「热度 / 口碑」判断基于大模型的知识生成，用于验证产品概念（MVP）。真实产品需要接入平台真实评论数据，做情感分析与营销内容识别——这是从 demo 到可用产品的下一步。
+
+---
+
+*本项目为个人独立作品，从 0 到 1 完成需求洞察、产品设计与多轮迭代。*
