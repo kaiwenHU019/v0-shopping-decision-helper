@@ -50,7 +50,12 @@ export async function POST(req: Request) {
 
     return Response.json(experimental_output)
   } catch (error) {
-    console.log('[v0] 拔草卡生成失败:', error)
-    return Response.json({ error: '生成失败，请稍后再试' }, { status: 500 })
+    const message = error instanceof Error ? error.message : String(error)
+    console.log('[v0] 拔草卡生成失败 - 完整错误:', error)
+    console.log('[v0] 错误信息:', message)
+    return Response.json(
+      { error: '生成失败，请稍后再试', detail: message },
+      { status: 500 },
+    )
   }
 }

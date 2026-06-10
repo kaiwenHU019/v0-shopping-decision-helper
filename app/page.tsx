@@ -29,7 +29,8 @@ export default function Page() {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || "生成失败")
+        console.log("[v0] 接口返回错误:", data)
+        throw new Error(data.detail || data.error || "生成失败")
       }
       const data: BacaoResult = await res.json()
       setResult(data)
