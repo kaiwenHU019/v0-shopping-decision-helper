@@ -1,19 +1,24 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import type { BacaoResult } from "@/lib/types"
-import { ProductCard } from "@/components/product-card"
+import { ProductCarousel } from "@/components/product-carousel"
 import { EditorPick } from "@/components/editor-pick"
-import { Sparkles, Search, Loader2 } from "lucide-react"
+import { Slider } from "@/components/ui/slider"
+import { Sparkles, Search, Loader2, SlidersHorizontal } from "lucide-react"
 
 const SUGGESTIONS = ["敏感肌防晒", "平价通勤背包", "学生党护眼台灯", "油皮夏季粉底液", "千元降噪耳机"]
+
+const PRICE_MIN = 0
+const PRICE_MAX = 2000
 
 export default function Page() {
   const [query, setQuery] = useState("")
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<BacaoResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_MIN, PRICE_MAX])
 
   async function generate(q: string) {
     const trimmed = q.trim()
@@ -34,6 +39,7 @@ export default function Page() {
       }
       const data: BacaoResult = await res.json()
       setResult(data)
+      setPriceRange([PRICE_MIN, PRICE_MAX])
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败，请稍后再试")
     } finally {
@@ -45,6 +51,13 @@ export default function Page() {
     e.preventDefault()
     generate(query)
   }
+
+  const filteredProducts = useMemo(() => {
+    if (!result) return []
+    return result.products.filter(
+      (p) => p.priceHigh >= priceRange[0] && p.priceLow <= priceRange[1],
+    )
+  }, [result, priceRange])
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-16 pt-8 sm:pt-12">
@@ -137,11 +150,35 @@ export default function Page() {
             <p className="text-pretty text-sm leading-relaxed text-muted-foreground">{result.summary}</p>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {result.products.map((p, i) => (
-              <ProductCard key={i} product={p} index={i} />
-            ))}
+          {/* Price range slider */}
+          <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                <SlidersHorizontal className="size-4 text-primary" />
+                价格范围
+              </span>
+              <span className="text-sm font-bold text-primary">
+                ¥{priceRange[0]} - ¥{priceRange[1]}
+                {priceRange[1] === PRICE_MAX ? "+" : ""}
+              </span>
+            </div>
+            <Slider
+              value={priceRange}
+              min={PRICE_MIN}
+              max={PRICE_MAX}
+              step={50}
+              onValueChange={(v) => setPriceRange([v[0], v[1]] as [number, number])}
+              aria-label="价格范围"
+            />
           </div>
+
+          {filteredProducts.length > 0 ? (
+            <ProductCarousel key={`${result.category}-${priceRange[0]}-${priceRange[1]}`} products={filteredProducts} />
+          ) : (
+            <p className="rounded-2xl bg-accent px-4 py-6 text-center text-sm text-accent-foreground">
+              该价格范围内没有候选产品，试试拉宽价格区间～
+            </p>
+          )}
 
           <EditorPick pick={result.editorPick} />
 
